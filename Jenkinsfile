@@ -13,10 +13,10 @@ pipeline {
   }
 
   environment {
-    APP_NAME         = 'kijanikiosk-payments'
-    BUILD_DIR        = 'dist'
-    NEXUS_URL        = 'http://host.docker.internal:8081/repository/npm-kijanikiosk/'
-    NODE_ENV         = 'test'
+    APP_NAME  = 'kijanikiosk-payments'
+    BUILD_DIR = 'dist'
+    NEXUS_URL = 'http://host.docker.internal:8081/repository/npm-kijanikiosk/'
+    NODE_ENV  = 'test'
   }
 
   stages {
@@ -70,6 +70,7 @@ pipeline {
         )]) {
           sh '''
             set -e
+            apk add --no-cache git
             PKG_VERSION=$(node -p "require('./package.json').version")
             GIT_SHORT=$(git rev-parse --short HEAD)
             ARTIFACT_VERSION="${PKG_VERSION}-${GIT_SHORT}"
