@@ -70,9 +70,8 @@ pipeline {
         )]) {
           sh '''
             set -e
-            apk add --no-cache git
             PKG_VERSION=$(node -p "require('./package.json').version")
-            GIT_SHORT=$(git rev-parse --short HEAD)
+            GIT_SHORT=$(echo $GIT_COMMIT | cut -c1-7)
             ARTIFACT_VERSION="${PKG_VERSION}-${GIT_SHORT}"
             echo "Publishing version: ${ARTIFACT_VERSION}"
             npm version ${ARTIFACT_VERSION} --no-git-tag-version
