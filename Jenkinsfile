@@ -75,8 +75,14 @@ pipeline {
             ARTIFACT_VERSION="${PKG_VERSION}-${GIT_SHORT}"
             echo "Publishing version: ${ARTIFACT_VERSION}"
             npm version ${ARTIFACT_VERSION} --no-git-tag-version
-            echo "${NEXUS_URL}:_auth=$(echo -n ${NEXUS_USER}:${NEXUS_PASS} | base64)" > .npmrc
+
+            # Write .npmrc with correct Nexus auth format
+            NEXUS_HOST="host.docker.internal:8081"
+            echo "//host.docker.internal:8081/repository/npm-kijanikiosk/:username=${NEXUS_USER}" > .npmrc
+            echo "//host.docker.internal:8081/repository/npm-kijanikiosk/:_password=$(echo -n ${NEXUS_PASS} | base64)" >> .npmrc
+            echo "//host.docker.internal:8081/repository/npm-kijanikiosk/:email=admin@kijanikiosk.dev" >> .npmrc
             echo "always-auth=true" >> .npmrc
+
             npm publish --registry=${NEXUS_URL}
             rm -f .npmrc
           '''
